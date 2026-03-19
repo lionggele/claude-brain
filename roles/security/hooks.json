@@ -1,0 +1,13 @@
+{
+  "PreToolUse": [
+    {
+      "matcher": "Write|Edit",
+      "hooks": [
+        {
+          "type": "command",
+          "command": "INPUT=$(cat); file=$(echo \"$INPUT\" | jq -r '.tool_input.file_path // empty'); content=$(echo \"$INPUT\" | jq -r '.tool_input.new_string // .tool_input.content // empty'); if echo \"$content\" | grep -iE '(password|secret|api_key)\\s*=\\s*\"[^$\\{]' 2>/dev/null; then echo '{\"decision\":\"block\",\"reason\":\"Hardcoded secret detected. Use environment variables or Secret Manager.\"}'; exit 0; fi; echo '{\"decision\":\"approve\"}'"
+        }
+      ]
+    }
+  ]
+}

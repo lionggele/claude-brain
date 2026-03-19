@@ -1,0 +1,17 @@
+# Secrets
+.env
+*.key
+credentials*.json
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+*.swp
+*.swo
+.idea/
+.vscode/
+
+# Backup files from sed
+*.bak

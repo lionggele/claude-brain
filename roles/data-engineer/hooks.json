@@ -1,0 +1,13 @@
+{
+  "PreToolUse": [
+    {
+      "matcher": "Bash",
+      "hooks": [
+        {
+          "type": "command",
+          "command": "INPUT=$(cat); cmd=$(echo \"$INPUT\" | jq -r '.tool_input.command // empty'); if echo \"$cmd\" | grep -qE 'f\".*SELECT|f\".*INSERT|f\".*UPDATE|f\".*DELETE'; then echo '{\"decision\":\"block\",\"reason\":\"Detected f-string SQL. Use parameterized queries.\"}'; exit 0; fi; echo '{\"decision\":\"approve\"}'"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "PostToolUse": [
+    {
+      "matcher": "Write|Edit",
+      "hooks": [
+        {
+          "type": "command",
+          "command": "file=$(cat | jq -r '.tool_input.file_path // empty'); if [[ \"$file\" == *.ts || \"$file\" == *.tsx || \"$file\" == *.js || \"$file\" == *.jsx ]]; then npx prettier --write \"$file\" 2>/dev/null; fi"
+        }
+      ]
+    }
+  ]
+}
