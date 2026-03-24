@@ -15,3 +15,6 @@ Thumbs.db
 
 # Backup files from sed
 *.bak
+
+# Personal data (not shared)
+.local/
