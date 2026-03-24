@@ -7,6 +7,8 @@ description: Detect user corrections and save them as confidence-scored learning
 
 When you detect the user correcting your approach, capture it as a scored learning.
 
+**Proactive detection**: You don't need to wait for `/brain-smart-capture`. If you notice a correction in normal conversation, offer to save it: "Want me to save this as a learning?" This is the primary way learnings get captured.
+
 ## Detection Patterns
 
 - "no, don't do that" -> save what NOT to do
@@ -15,6 +17,8 @@ When you detect the user correcting your approach, capture it as a scored learni
 - "always do X" / "never do Y" -> save the rule
 - User accepts an unusual approach without pushback -> positive learning
 - Same correction appears again -> INCREASE confidence
+
+**Duplicate prevention**: Before calling the capture script, YOU must read corrections.md and check for semantically similar learnings. If one exists, bump its confidence instead of creating a new entry. The script has basic matching but can't do semantic comparison -- that's your job.
 
 ## Confidence Levels
 

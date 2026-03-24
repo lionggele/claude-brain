@@ -78,13 +78,28 @@ else
 fi
 
 # Check if similar learning exists (update instead of duplicate)
-if [ -f "$TARGET" ] && grep -q "$LEARNING" "$TARGET" 2>/dev/null; then
-    # Update existing entry: bump confidence and seen count
-    ESCAPED=$(echo "$LEARNING" | sed 's/[\/&]/\\&/g')
-    # Remove old line
-    grep -v "$ESCAPED" "$TARGET" > "$TARGET.tmp" 2>/dev/null || true
+# Uses case-insensitive match on the learning text
+SIMILAR_LINE=""
+if [ -f "$TARGET" ]; then
+    # Try exact match first (case-insensitive)
+    SIMILAR_LINE=$(grep -iF "$LEARNING" "$TARGET" 2>/dev/null | head -1 || true)
+
+    # If no exact match, try matching the first 4+ letter word as anchor
+    if [ -z "$SIMILAR_LINE" ]; then
+        ANCHOR=$(echo "$LEARNING" | grep -oE '[A-Za-z]{4,}' | head -1)
+        if [ -n "$ANCHOR" ]; then
+            SIMILAR_LINE=$(grep -i "$ANCHOR" "$TARGET" 2>/dev/null | grep '^\- \[' | head -1 || true)
+        fi
+    fi
+fi
+
+if [ -n "$SIMILAR_LINE" ]; then
+    echo "Found similar learning:"
+    echo "  $SIMILAR_LINE"
+    echo "Replacing with updated version (confidence: $CONFIDENCE, seen: ${SEEN}x)"
+    # Remove the similar line using temp file (portable)
+    grep -vF "$SIMILAR_LINE" "$TARGET" > "$TARGET.tmp" 2>/dev/null || true
     mv "$TARGET.tmp" "$TARGET"
-    echo "Updated existing learning (confidence: $CONFIDENCE, seen: ${SEEN}x)"
 fi
 
 # Write new/updated entry

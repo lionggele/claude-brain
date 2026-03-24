@@ -1,16 +1,24 @@
 #!/bin/bash
-# Usage: bash activate-role.sh <role-name>
+# Usage: bash activate-role.sh <role-name> [--no-hooks]
 # Usage: bash activate-role.sh backend+devops  (compose multiple roles)
 # Switches the active role in CLAUDE.md AND merges hooks into settings.json
 
 BRAIN_DIR="$(cd "$(dirname "$0")/.." && pwd)"
-INPUT="$1"
+INPUT=""
+SKIP_HOOKS=false
+
+for arg in "$@"; do
+    case $arg in
+        --no-hooks) SKIP_HOOKS=true ;;
+        *) INPUT="$arg" ;;
+    esac
+done
 
 if [ -z "$INPUT" ]; then
     echo "Available roles:"
     ls "$BRAIN_DIR/roles/" | while read r; do echo "  $r"; done
     echo ""
-    echo "Usage: bash activate-role.sh <role-name>"
+    echo "Usage: bash activate-role.sh <role-name> [--no-hooks]"
     echo "       bash activate-role.sh backend+devops  (compose multiple)"
     exit 1
 fi
@@ -60,12 +68,48 @@ for ROLE in "${ROLES[@]}"; do
     fi
 done
 
+# Inject safety hooks (careful + freeze) unless --no-hooks
+if [ "$SKIP_HOOKS" = false ]; then
+    CAREFUL_HOOK="$BRAIN_DIR/shared/hooks/check-careful.sh"
+    FREEZE_HOOK="$BRAIN_DIR/shared/hooks/check-freeze.sh"
+
+    SAFETY_HOOKS=$(cat <<EOJSON
+{
+  "PreToolUse": [
+    {
+      "matcher": "Bash",
+      "hooks": [{"type": "command", "command": "bash $CAREFUL_HOOK"}]
+    },
+    {
+      "matcher": "Edit",
+      "hooks": [{"type": "command", "command": "bash $FREEZE_HOOK"}]
+    },
+    {
+      "matcher": "Write",
+      "hooks": [{"type": "command", "command": "bash $FREEZE_HOOK"}]
+    }
+  ]
+}
+EOJSON
+)
+
+    MERGED_HOOKS=$(echo "$MERGED_HOOKS" | jq -s '.[0] as $role | .[1] as $safety |
+      ($role // {}) * ($safety // {}) |
+      .PreToolUse = (($role.PreToolUse // []) + ($safety.PreToolUse // []))
+    ' - <(echo "$SAFETY_HOOKS"))
+fi
+
 # Update settings.json with merged hooks (preserve other settings)
 jq --argjson hooks "$MERGED_HOOKS" '.hooks = $hooks' "$SETTINGS_FILE" > "$SETTINGS_FILE.tmp"
 mv "$SETTINGS_FILE.tmp" "$SETTINGS_FILE"
 
 echo "Activated role(s): ${ROLES[*]}"
 echo "Hooks merged into: $SETTINGS_FILE"
+if [ "$SKIP_HOOKS" = false ]; then
+    echo "  Safety: careful (destructive cmd guard) + freeze (edit boundary)"
+else
+    echo "  Safety hooks: SKIPPED (--no-hooks)"
+fi
 for ROLE in "${ROLES[@]}"; do
     echo "  Config: $BRAIN_DIR/roles/$ROLE/CLAUDE.md"
 done
