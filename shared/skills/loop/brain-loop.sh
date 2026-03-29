@@ -77,7 +77,7 @@ Examples:
 
 Environment:
   RALPH_AGENT       Agent command (default: claude)
-  RALPH_AGENT_ARGS  Extra args passed to agent (default for Claude: "--dangerously-skip-permissions")
+  RALPH_AGENT_ARGS  Extra args passed to agent (auto mode adds --dangerously-skip-permissions)
   WORK_SCOPE        Scope string for plan-work mode
   RALPH_MAX_AUTO    Safety cap for auto mode when no max given (default: 20)
 EOF
@@ -152,9 +152,8 @@ fi
 agent="${RALPH_AGENT:-claude}"
 agent_args="${RALPH_AGENT_ARGS:-}"
 
-if [[ "$agent" == "claude" && "$agent_args" == "" ]]; then
-  agent_args="--dangerously-skip-permissions"
-fi
+# brain-loop: no default skip-permissions. Use RALPH_AGENT_ARGS env var to customize.
+# For auto/unattended mode, the auto block below still adds skip-permissions.
 
 # Auto mode: ensure skip-permissions and enforce safety cap.
 if [[ "$run_style" == "auto" ]]; then
