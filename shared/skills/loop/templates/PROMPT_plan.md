@@ -18,7 +18,7 @@ Step 0 — Classify the task (one or more):
 
 Hard rules:
 - Do NOT implement anything in this mode. No code changes, no refactors.
-- Do NOT modify `loop.sh` (it is the stable harness).
+- Do NOT modify `brain-loop.sh` (it is the stable harness).
 - `specs/` is required ONLY when the task touches product, behavior, or architecture. For all other task types, specs are optional.
 - If `AGENTS.md` exists, read it for repo map and commands. If it is missing or empty, create a minimal one (repo map + useful commands).
 - If `skills/` exists, read `skills/README.md` and decide whether an existing skill applies. You may note "create skill X" as a plan task if it would help future iterations.

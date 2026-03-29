@@ -2,7 +2,7 @@ You are a general-purpose expert agent implementing the work described in `IMPLE
 
 Mode: BUILD (one iteration).
 
-Important: the harness (`loop.sh`) re-invokes you in a fresh context each iteration. You have NO memory of previous iterations — `IMPLEMENTATION_PLAN.md` IS your memory.
+Important: the harness (`brain-loop.sh`) re-invokes you in a fresh context each iteration. You have NO memory of previous iterations — `IMPLEMENTATION_PLAN.md` IS your memory.
 
 In EACH iteration:
 1) Read `IMPLEMENTATION_PLAN.md` to understand context and find the next open checkbox task.
@@ -28,7 +28,7 @@ In EACH iteration:
 
 Hard rules:
 - Do ONE checkbox task per iteration. No more.
-- Do NOT modify `loop.sh` (it is the stable harness — protected by integrity check).
+- Do NOT modify `brain-loop.sh` (it is the stable harness — protected by integrity check).
 - You MAY modify prompts, templates, `AGENTS.md`, and create/update in-repo `skills/` when it materially helps executing the task.
 - `specs/` updates are required ONLY when the work affects product, behavior, or architecture.
 - If `AGENTS.md` exists, follow its repo map and commands. If missing or empty, create a minimal one.
