@@ -1,0 +1,43 @@
+# Eval definitions for PROMPT_plan_work.md
+# Edit these to match your project's scoped planning quality standards.
+
+target: PROMPT_plan_work.md
+runs_per_experiment: 5
+
+scenarios:
+  - name: "Feature scope"
+    input: "WORK_SCOPE='Add user authentication with JWT tokens'"
+  - name: "Bug fix scope"
+    input: "WORK_SCOPE='Fix race condition in the payment processing queue'"
+  - name: "Research scope"
+    input: "WORK_SCOPE='Evaluate 3 database options and recommend one for our analytics workload'"
+  - name: "Refactor scope"
+    input: "WORK_SCOPE='Extract the notification logic into a reusable service module'"
+  - name: "Creative scope"
+    input: "WORK_SCOPE='Design and create onboarding email sequence (5 emails)'"
+
+evals:
+  - name: "Step count"
+    question: "Does the plan contain between 3 and 7 checkbox steps (inclusive)?"
+    pass: "Plan has 3, 4, 5, 6, or 7 checkbox items"
+    fail: "Plan has fewer than 3 or more than 7 steps"
+
+  - name: "Scope respected"
+    question: "Does the plan stay within the stated WORK_SCOPE without expanding into unrelated areas?"
+    pass: "All tasks directly relate to the stated scope"
+    fail: "Plan includes tasks outside the scope boundary"
+
+  - name: "Scope restated"
+    question: "Does the plan include a verbatim restatement of the work scope?"
+    pass: "The exact WORK_SCOPE text appears in the plan"
+    fail: "Scope is paraphrased, missing, or altered"
+
+  - name: "Done-when checklist"
+    question: "Does the plan include a 'done when' or completion checklist?"
+    pass: "A clear completion criteria section exists"
+    fail: "No completion criteria found"
+
+  - name: "Actionable steps"
+    question: "Does each step mention specific files, artifacts, or concrete deliverables?"
+    pass: "Steps reference specific things to create, modify, or produce"
+    fail: "Steps are vague like 'implement the feature' without specifics"

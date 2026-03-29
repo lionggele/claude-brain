@@ -1,0 +1,43 @@
+# Eval definitions for PROMPT_plan.md
+# Edit these to match your project's planning quality standards.
+
+target: PROMPT_plan.md
+runs_per_experiment: 5
+
+scenarios:
+  - name: "REST API project"
+    input: "Build a REST API for a todo app with user authentication and role-based access control"
+  - name: "Research task"
+    input: "Research the top 5 AI coding assistants, compare features, pricing, and developer experience"
+  - name: "Creative project"
+    input: "Create a presentation deck about renewable energy solutions for a stakeholder meeting"
+  - name: "Data pipeline"
+    input: "Set up an ETL pipeline to ingest CSV files, transform them, and load into a PostgreSQL database"
+  - name: "Documentation"
+    input: "Write comprehensive API documentation for an existing Express.js backend with 15 endpoints"
+
+evals:
+  - name: "Clarification phase"
+    question: "Does the agent ask at least one clarification question before producing the plan?"
+    pass: "Agent asks questions and waits for answers before writing the plan"
+    fail: "Agent jumps straight to producing a plan without asking anything"
+
+  - name: "Task list present"
+    question: "Does IMPLEMENTATION_PLAN.md contain a checkbox task list with at least 3 items?"
+    pass: "At least 3 checkbox items (- [ ]) present in the output"
+    fail: "No checkbox task list or fewer than 3 items"
+
+  - name: "Task type classified"
+    question: "Does the plan classify the task type from the predefined categories?"
+    pass: "One or more task types from the classification list are explicitly stated"
+    fail: "No task type classification found"
+
+  - name: "Acceptance criteria"
+    question: "Does the plan include acceptance criteria with evidence-based checks?"
+    pass: "An acceptance criteria section exists with specific, verifiable conditions"
+    fail: "No acceptance criteria section or criteria are vague/missing"
+
+  - name: "Scope boundaries"
+    question: "Does the plan define what is in-scope and out-of-scope?"
+    pass: "Explicit in-scope and out-of-scope boundaries are stated"
+    fail: "No scope boundaries defined"

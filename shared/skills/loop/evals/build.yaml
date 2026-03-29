@@ -1,0 +1,43 @@
+# Eval definitions for PROMPT_build.md
+# Edit these to match your project's build quality standards.
+
+target: PROMPT_build.md
+runs_per_experiment: 5
+
+scenarios:
+  - name: "Single code task"
+    input: "IMPLEMENTATION_PLAN.md with one open task: Create a utility function that validates email addresses"
+  - name: "Research task"
+    input: "IMPLEMENTATION_PLAN.md with one open task: Research and document 3 options for a caching layer"
+  - name: "File manipulation"
+    input: "IMPLEMENTATION_PLAN.md with one open task: Rename all .jpeg files in assets/ to .jpg and update references"
+  - name: "Creative task"
+    input: "IMPLEMENTATION_PLAN.md with one open task: Write a project README with badges, install steps, and usage examples"
+  - name: "Completion pass"
+    input: "IMPLEMENTATION_PLAN.md with all tasks checked — agent should do final verification and exit"
+
+evals:
+  - name: "Single task only"
+    question: "Did the agent pick exactly ONE open checkbox task and complete it (not multiple)?"
+    pass: "Exactly one task was picked and worked on"
+    fail: "Agent worked on zero tasks, or more than one task"
+
+  - name: "Plan updated"
+    question: "Did the agent update IMPLEMENTATION_PLAN.md with the completed checkbox and verification evidence?"
+    pass: "The task checkbox is marked [x] and verification notes are recorded"
+    fail: "Plan was not updated, or checkbox not checked, or no verification evidence"
+
+  - name: "Verification ran"
+    question: "Did the agent run some form of verification appropriate to the task type?"
+    pass: "Agent ran tests, checked files, reviewed output, or performed task-appropriate verification"
+    fail: "No verification step was performed"
+
+  - name: "Clean exit"
+    question: "Did the agent exit after completing the task (not continue to next task)?"
+    pass: "Agent completed one task and stopped"
+    fail: "Agent continued working on additional tasks or looped"
+
+  - name: "Domain appropriate"
+    question: "Did the agent use tools/approach appropriate to the task domain (not just code tools for non-code tasks)?"
+    pass: "Tools and approach match the task type (research uses search, files use file ops, etc.)"
+    fail: "Agent tried to use code-only tools for a non-code task"
