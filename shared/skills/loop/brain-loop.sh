@@ -284,6 +284,19 @@ run_agent() {
   local prompt
   prompt="$(cat "$prompt_file")"
 
+  # brain-loop: inject active role instructions
+  local brain_dir="$HOME/.claude/brain"
+  local claude_md="$brain_dir/CLAUDE.md"
+  if [[ -f "$claude_md" ]]; then
+    local role_import
+    role_import="$(grep '@roles/' "$claude_md" | head -1 | sed 's/@//' | tr -d ' ')"
+    if [[ -n "$role_import" && -f "$brain_dir/$role_import" ]]; then
+      local role_content
+      role_content="$(cat "$brain_dir/$role_import")"
+      prompt="${role_content}"$'\n\n'"${prompt}"
+    fi
+  fi
+
   # Variable substitution for dynamic prompts
   if [[ "$mode" == "plan-work" ]]; then
     prompt="${prompt//'${WORK_SCOPE}'/${WORK_SCOPE}}"
