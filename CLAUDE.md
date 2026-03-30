@@ -4,7 +4,7 @@ Personal Claude Code configuration library.
 
 ## Active Role
 @shared/CLAUDE.md
-@roles/backend/CLAUDE.md
+@roles/fullstack/CLAUDE.md
 
 ## How to Switch Roles
 Run: `bash ~/.claude/brain/scripts/activate-role.sh <role>`

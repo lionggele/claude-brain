@@ -107,11 +107,37 @@ Type these inside Claude Code CLI:
 | `/brain-agent-design` | Agent systems, MCP servers, orchestration | Building agentic workflows |
 | `/brain-service-scaffold` | Bootstrap FastAPI/NestJS service | Starting a new microservice |
 
+### Autonomous Building (NEW)
+
+| Command | What It Does | When to Use |
+|---------|-------------|-------------|
+| `/brain-loop plan` | Interactive planning (95% confidence gate) | Starting a feature |
+| `/brain-loop build 10` | Build 10 tasks autonomously | Implementing a plan |
+| `/brain-loop auto 20` | Fully unattended build (AFK) | Going to lunch/overnight |
+| `/brain-loop autoresearch <target>` | Optimize a skill/prompt via binary evals | Weekly self-improvement |
+
+### Enhanced Code Review (NEW)
+
+| Command | What It Does | When to Use |
+|---------|-------------|-------------|
+| `/brain-review-v2` | 5-agent parallel review with confidence scoring | Before committing (replaces /brain-review) |
+
+Runs 4 agents in parallel (critical, quality, history, silent-failures), then a confidence scorer filters noise. Optional Codex cross-check with `BRAIN_CODEX_REVIEW=1`.
+
+### Self-Improvement (NEW)
+
+| Command | What It Does | When to Use |
+|---------|-------------|-------------|
+| `/brain-autoresearch` | Optimize any skill/role via binary evals | Weekly: optimize most-used skill |
+
+Targets: `roles/*/CLAUDE.md`, `skills/*/SKILL.md`, `review-v2/checklist.md`, `hooks/*.sh`
+
 ### Legacy
 
 | Command | What It Does |
 |---------|-------------|
 | `/brain-capture-learning` | Simple capture (no confidence scoring, use smart-capture instead) |
+| `/brain-review` | Single-pass review (replaced by review-v2) |
 
 ---
 
@@ -266,7 +292,10 @@ cat ~/.claude/brain/projects/my-project/context.md
     CLAUDE.md                            <- rules for ALL roles
     memory/corrections.md                <- global learnings
     memory/sessions/                     <- session summaries
-    skills/                              <- 15 skill definitions
+    skills/                              <- 18 skill definitions
+      loop/SKILL.md + loop.sh + templates/ <- NEW: plan/build/auto harness
+      review-v2/SKILL.md + agents/     <- NEW: 5-agent review
+      autoresearch/SKILL.md            <- NEW: self-improvement engine
       api-design/SKILL.md
       rag-pipeline/SKILL.md
       agent-design/SKILL.md
@@ -300,10 +329,16 @@ cat ~/.claude/brain/projects/my-project/context.md
     my-project/
       context.md                         <- project living memory
       artifacts/                         <- decision docs
+    evals/                               <- NEW: binary eval suites
+      review/scenarios.json + criteria.json + changelog.md
+      roles/backend.yaml + frontend.yaml + fullstack.yaml
   scripts/
     install.sh
     activate-role.sh                     <- switch role + wire hooks
     init-project.sh                      <- bootstrap project integration
+    brain-loop.sh                        <- NEW: iterative agent harness
+    run-autoresearch.sh                  <- NEW: convenience autoresearch
+    codex-session.py                     <- NEW: Codex co-worker manager
     smart-capture.sh                     <- confidence-scored learning
     capture-learning.sh                  <- simple learning capture
     session-summary.sh
@@ -351,16 +386,18 @@ bash ~/.claude/brain/scripts/               /brain-brain-status
   activate-role.sh backend+devops           /brain-api-design
   activate-role.sh <role> --no-hooks        /brain-rag-pipeline
   init-project.sh <name> --role <role>      /brain-agent-design
-  smart-capture.sh --role <r> "text"        /brain-service-scaffold
-  list-learnings.sh                         /brain-smart-capture
-  session-summary.sh "text"                 /brain-session-summary
-  sync.sh                                   /brain-project-context
-                                            /brain-safe (freeze/unfreeze)
-                                            /brain-review
+  brain-loop.sh plan                        /brain-service-scaffold
+  brain-loop.sh 10                          /brain-smart-capture
+  brain-loop.sh auto 20                     /brain-session-summary
+  brain-loop.sh autoresearch <target>       /brain-project-context
+  run-autoresearch.sh --target <f>          /brain-safe (freeze/unfreeze)
+  smart-capture.sh --role <r> "text"        /brain-review-v2 (NEW)
+  list-learnings.sh                         /brain-loop (NEW)
+  session-summary.sh "text"                 /brain-autoresearch (NEW)
+  sync.sh                                   /brain-review (legacy)
                                             /brain-learning-review
                                             /brain-retro
                                             /brain-pipeline
-                                            /brain-capture-learning (legacy)
 ```
 
 ## Typical Session Flow
@@ -373,8 +410,46 @@ bash ~/.claude/brain/scripts/               /brain-brain-status
 5. Work normally -- brain rules apply, safety hooks protect
 6. If Claude makes a mistake, correct it -- smart-capture saves it
 7. For decisions, use /brain-spike -- saves artifact
-8. Before committing: /brain-review
+8. Before committing: /brain-review-v2 (multi-agent review)
 9. End session: /brain-session-summary
-10. End of week: /brain-retro
+10. End of week: /brain-retro + /brain-autoresearch on most-used skill
 11. Push memory: bash ~/.claude/brain/scripts/sync.sh
 ```
+
+## Autonomous Build Flow (NEW)
+
+```
+1. Describe what you want to build
+2. brain-loop.sh plan          <- asks questions until 95% confident
+3. Review IMPLEMENTATION_PLAN.md
+4. brain-loop.sh 5             <- builds 5 tasks, one per iteration
+5. brain-loop.sh auto 20       <- go AFK, builds autonomously
+6. Come back: git log --oneline -20 + cat IMPLEMENTATION_PLAN.md
+7. /brain-review-v2            <- review everything built
+8. /brain-session-summary
+```
+
+## Self-Improvement Cycle (NEW)
+
+```
+Daily:    Corrections accumulate via smart-capture
+Weekly:   /brain-autoresearch review-v2/checklist.md (15 experiments, ~$1.50)
+Monthly:  /brain-autoresearch roles/backend/CLAUDE.md (20 experiments, ~$2)
+Check:    open ~/.claude/brain/shared/evals/<target>/dashboard.html
+```
+
+---
+
+## Changelog
+
+### 2026-03-29: Enhancement Library (v2)
+- Added: brain-loop (plan/build/auto/autoresearch modes) -- clone of ralph-loop harness
+- Added: brain-review-v2 (5-agent parallel review with confidence scoring)
+- Added: brain-autoresearch (self-improvement engine with binary evals)
+- Added: codex-session.py for optional Codex cross-check in reviews
+- Added: evals/ directory for binary eval suites
+- Added: new pipeline chains (full autonomous build, enhanced review, self-improvement)
+- Moved: /brain-review to legacy (replaced by review-v2)
+
+### 2026-03-24: Initial Release (v1)
+- 10 roles, 15 skills, safety hooks, learning system, pipelines, retro analytics

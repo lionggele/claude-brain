@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Brain Cheat Sheet</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+  :root {
+    --sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: var(--sans);
+    font-size: 12.5px;
+    line-height: 1.45;
+    color: #1f2328;
+    background: #f0f2f5;
+    padding: 1.5rem;
+  }
+
+  /* ---- Header ---- */
+  .page-header {
+    text-align: center;
+    margin-bottom: 1.25rem;
+  }
+
+  .page-header h1 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: #1a1a2e;
+  }
+
+  .page-header h1 span { color: #2563eb; }
+
+  .page-header .ver {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    background: #2563eb;
+    color: #fff;
+    padding: 0.1rem 0.45rem;
+    border-radius: 999px;
+    vertical-align: middle;
+    margin-left: 0.3rem;
+  }
+
+  .page-header p {
+    color: #656d76;
+    font-size: 0.78rem;
+    margin-top: 0.15rem;
+  }
+
+  /* ---- Grid ---- */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.75rem;
+  }
+
+  /* ---- Section Card ---- */
+  .section {
+    border-radius: 6px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  }
+
+  .section-head {
+    padding: 0.4rem 0.65rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .section-body {
+    padding: 0.55rem 0.65rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  /* ---- Color Themes ---- */
+  .t-blue .section-head { background: #2563eb; }
+  .t-blue .section-body { background: #eff6ff; }
+
+  .t-purple .section-head { background: #7c3aed; }
+  .t-purple .section-body { background: #f5f3ff; }
+
+  .t-green .section-head { background: #059669; }
+  .t-green .section-body { background: #ecfdf5; }
+
+  .t-amber .section-head { background: #d97706; }
+  .t-amber .section-body { background: #fffbeb; }
+
+  .t-orange .section-head { background: #c2410c; }
+  .t-orange .section-body { background: #fff7ed; }
+
+  .t-red .section-head { background: #dc2626; }
+  .t-red .section-body { background: #fef2f2; }
+
+  .t-cyan .section-head { background: #0891b2; }
+  .t-cyan .section-body { background: #ecfeff; }
+
+  .t-gray .section-head { background: #4b5563; }
+  .t-gray .section-body { background: #f9fafb; }
+
+  .t-pink .section-head { background: #be185d; }
+  .t-pink .section-body { background: #fdf2f8; }
+
+  .t-teal .section-head { background: #0d9488; }
+  .t-teal .section-body { background: #f0fdfa; }
+
+  /* ---- Sub-headers ---- */
+  .sub {
+    font-size: 0.68rem;
+    font-weight: 600;
+    font-style: italic;
+    color: #656d76;
+    padding: 0.3rem 0 0.15rem;
+    border-bottom: 1px dotted #d1d9e0;
+    margin-top: 0.25rem;
+  }
+
+  .sub:first-child { margin-top: 0; }
+
+  /* ---- Key-Value Rows ---- */
+  .row {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    padding: 0.2rem 0;
+    border-bottom: 1px solid rgba(0,0,0,0.04);
+  }
+
+  .row:last-child { border-bottom: none; }
+
+  .k {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: #1a1a2e;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .v {
+    color: #4b5563;
+    font-size: 0.72rem;
+    flex: 1;
+  }
+
+  /* ---- Command badge ---- */
+  .cmd {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    font-weight: 500;
+    background: #fff;
+    border: 1px solid #d1d9e0;
+    border-radius: 3px;
+    padding: 0.08rem 0.35rem;
+    white-space: nowrap;
+    box-shadow: 0 1px 0 rgba(0,0,0,0.04);
+  }
+
+  /* ---- Code blocks ---- */
+  pre {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    line-height: 1.5;
+    background: #fff;
+    border: 1px solid #d1d9e0;
+    border-radius: 4px;
+    padding: 0.4rem 0.5rem;
+    margin: 0.3rem 0;
+    overflow-x: auto;
+    white-space: pre;
+  }
+
+  .hl-cmd { color: #2563eb; font-weight: 600; }
+  .hl-flag { color: #c2410c; }
+  .hl-str { color: #059669; }
+  .hl-cmt { color: #9ca3af; }
+  .hl-path { color: #7c3aed; }
+
+  /* ---- Step list ---- */
+  .steps {
+    list-style: none;
+    counter-reset: s;
+  }
+
+  .steps li {
+    counter-increment: s;
+    padding: 0.2rem 0 0.2rem 1.5rem;
+    position: relative;
+    font-size: 0.72rem;
+    border-bottom: 1px solid rgba(0,0,0,0.04);
+  }
+
+  .steps li:last-child { border-bottom: none; }
+
+  .steps li::before {
+    content: counter(s);
+    position: absolute;
+    left: 0;
+    top: 0.2rem;
+    width: 1.1rem;
+    height: 1.1rem;
+    border-radius: 50%;
+    background: #e5e7eb;
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    font-weight: 600;
+    color: #4b5563;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* ---- Confidence bars ---- */
+  .conf-row {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.15rem 0;
+    font-size: 0.7rem;
+  }
+
+  .conf-label {
+    font-family: var(--mono);
+    font-weight: 500;
+    width: 4.5rem;
+    flex-shrink: 0;
+  }
+
+  .conf-track {
+    flex: 1;
+    height: 5px;
+    background: #e5e7eb;
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .conf-fill { height: 100%; border-radius: 3px; }
+  .cf-gray { background: #9ca3af; }
+  .cf-orange { background: #f59e0b; }
+  .cf-blue { background: #3b82f6; }
+  .cf-green { background: #10b981; }
+
+  .conf-range {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    color: #9ca3af;
+    width: 3rem;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  /* ---- Flow diagram ---- */
+  .flow {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    flex-wrap: wrap;
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    margin: 0.35rem 0;
+  }
+
+  .flow-box {
+    background: #fff;
+    border: 1px solid #d1d9e0;
+    border-radius: 4px;
+    padding: 0.2rem 0.45rem;
+    white-space: nowrap;
+  }
+
+  .flow-arr { color: #9ca3af; }
+
+  /* ---- Tag ---- */
+  .tag {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    font-weight: 500;
+    padding: 0.05rem 0.3rem;
+    border-radius: 3px;
+    white-space: nowrap;
+  }
+
+  .tag-b { background: #dbeafe; color: #1d4ed8; }
+  .tag-g { background: #d1fae5; color: #047857; }
+  .tag-p { background: #ede9fe; color: #6d28d9; }
+  .tag-o { background: #ffedd5; color: #c2410c; }
+  .tag-r { background: #fee2e2; color: #dc2626; }
+  .tag-d { background: #f3f4f6; color: #6b7280; }
+
+  /* ---- Span helpers ---- */
+  .span-2 { grid-column: span 2; }
+  .span-3 { grid-column: span 3; }
+  .span-4 { grid-column: span 4; }
+
+  /* ---- Note ---- */
+  .note {
+    font-size: 0.68rem;
+    color: #6b7280;
+    font-style: italic;
+    margin-top: 0.25rem;
+  }
+
+  /* ---- Responsive ---- */
+  @media (max-width: 1100px) {
+    .grid { grid-template-columns: repeat(2, 1fr); }
+    .span-3, .span-4 { grid-column: span 2; }
+  }
+
+  @media (max-width: 650px) {
+    .grid { grid-template-columns: 1fr; }
+    .span-2, .span-3, .span-4 { grid-column: span 1; }
+    body { padding: 0.75rem; }
+  }
+
+  @media print {
+    body { background: #fff; padding: 0; font-size: 11px; }
+    .section { break-inside: avoid; box-shadow: none; }
+    .grid { gap: 0.5rem; }
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1><span>Claude</span> Brain <span class="ver">v1.0</span></h1>
+  <p>Role-based, self-learning Claude Code configuration &mdash; 10 roles &bull; 10 skills &bull; confidence-scored memory</p>
+</div>
+
+<div class="grid">
+
+<!-- ========== COL 1: INSTALL ========== -->
+<div class="section t-blue">
+  <div class="section-head">&#x1F527; Install</div>
+  <div class="section-body">
+    <pre><span class="hl-cmd">git clone</span> <span class="hl-str">https://github.com/lionggele/claude-brain.git</span>
+<span class="hl-cmd">cd</span> ~/Projects/claude-brain
+<span class="hl-cmd">bash</span> install.sh</pre>
+    <div class="sub">What install.sh does</div>
+    <ol class="steps">
+      <li>Symlinks repo &rarr; <span class="cmd">~/.claude/brain/</span></li>
+      <li>Adds <span class="cmd">@brain</span> import to <span class="cmd">~/.claude/CLAUDE.md</span></li>
+      <li>Symlinks 10 skills to <span class="cmd">~/.claude/skills/brain-*</span></li>
+      <li>Creates <span class="cmd">.local/</span> for personal data (gitignored)</li>
+      <li>Creates <span class="cmd">projects/</span> for artifacts</li>
+    </ol>
+    <p class="note">After install, every Claude Code session loads brain rules + skills.</p>
+  </div>
+</div>
+
+<!-- ========== COL 2: HOW IT WORKS ========== -->
+<div class="section t-purple">
+  <div class="section-head">&#x2699;&#xFE0F; How It Works</div>
+  <div class="section-body">
+    <div class="sub">Auto-load chain</div>
+    <pre><span class="hl-path">~/.claude/CLAUDE.md</span>
+  <span class="hl-cmt">@</span><span class="hl-path">~/.claude/brain/CLAUDE.md</span>
+    <span class="hl-cmt">@</span><span class="hl-path">shared/CLAUDE.md</span>            <span class="hl-cmt"># all roles</span>
+    <span class="hl-cmt">@</span><span class="hl-path">roles/backend/CLAUDE.md</span>     <span class="hl-cmt"># active role</span>
+    <span class="hl-cmt">@</span><span class="hl-path">shared/memory/corrections.md</span> <span class="hl-cmt"># learnings</span></pre>
+    <div class="sub">Skill discovery</div>
+    <pre><span class="hl-path">~/.claude/skills/brain-*/SKILL.md</span>
+  <span class="hl-cmt"># auto-discovered as /brain-* commands</span></pre>
+    <div class="sub">Every session</div>
+    <ol class="steps">
+      <li>Reads <span class="cmd">~/.claude/CLAUDE.md</span> &rarr; loads brain via @ imports</li>
+      <li>Discovers <span class="cmd">brain-*</span> skills &rarr; registers slash commands</li>
+      <li>If project CLAUDE.md has context &rarr; loads artifacts</li>
+    </ol>
+  </div>
+</div>
+
+<!-- ========== COL 3: ROLES ========== -->
+<div class="section t-green">
+  <div class="section-head">&#x1F465; Roles</div>
+  <div class="section-body">
+    <div class="sub">Switch (terminal)</div>
+    <pre><span class="hl-cmd">bash</span> ~/.claude/brain/scripts/activate-role.sh <span class="hl-flag">backend</span>
+<span class="hl-cmd">bash</span> ~/.claude/brain/scripts/activate-role.sh <span class="hl-flag">backend+devops</span></pre>
+    <div class="sub">Available roles</div>
+    <div class="row"><span class="tag tag-b">backend</span> <span class="v">APIs, databases, Python/Node</span></div>
+    <div class="row"><span class="tag tag-b">frontend</span> <span class="v">React, UI, CSS, design systems</span></div>
+    <div class="row"><span class="tag tag-b">fullstack</span> <span class="v">Frontend + Backend combined</span></div>
+    <div class="row"><span class="tag tag-g">devops</span> <span class="v">Infrastructure, CI/CD, cloud</span></div>
+    <div class="row"><span class="tag tag-g">data-engineer</span> <span class="v">Migrations, ETL, embeddings</span></div>
+    <div class="row"><span class="tag tag-p">research</span> <span class="v">ML experiments, notebooks, eval</span></div>
+    <div class="row"><span class="tag tag-p">tech-lead</span> <span class="v">Architecture, reviews, mentoring</span></div>
+    <div class="row"><span class="tag tag-o">security</span> <span class="v">Vulnerability scanning, audit</span></div>
+    <div class="row"><span class="tag tag-o">mobile</span> <span class="v">React Native, Flutter, iOS/Android</span></div>
+    <div class="row"><span class="tag tag-d">writer</span> <span class="v">Technical writing, API docs</span></div>
+  </div>
+</div>
+
+<!-- ========== COL 4: PROJECT SETUP ========== -->
+<div class="section t-amber">
+  <div class="section-head">&#x1F4C1; Project Setup</div>
+  <div class="section-body">
+    <div class="sub">Init (terminal)</div>
+    <pre><span class="hl-cmd">cd</span> ~/Projects/my-api
+<span class="hl-cmt"># personal (symlink)</span>
+<span class="hl-cmd">bash</span> ~/.claude/brain/scripts/init-project.sh <span class="hl-str">my-api</span> <span class="hl-flag">--role backend</span>
+<span class="hl-cmt"># team (copy into repo)</span>
+<span class="hl-cmd">bash</span> ~/.claude/brain/scripts/init-project.sh <span class="hl-str">my-api</span> <span class="hl-flag">--mode copy</span></pre>
+    <div class="sub">Creates</div>
+    <div class="row"><span class="cmd">CLAUDE.md</span> <span class="v">Project entry (imports brain + role)</span></div>
+    <div class="row"><span class="cmd">context.md</span> <span class="v">Living memory (stack, decisions)</span></div>
+    <div class="row"><span class="cmd">artifacts/</span> <span class="v">Decision docs from spikes</span></div>
+    <div class="sub">Team sharing</div>
+    <p class="note"><span class="cmd">--mode copy</span> commits brain into repo. Teammates get it on <span class="cmd">git clone</span>.</p>
+  </div>
+</div>
+
+<!-- ========== ROW 2: SLASH COMMANDS (FULL WIDTH) ========== -->
+<div class="section t-cyan span-4">
+  <div class="section-head">&#x26A1; Slash Commands &mdash; Type These in Claude Code CLI</div>
+  <div class="section-body" style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.5rem;">
+    <div>
+      <div class="sub">Core Workflow</div>
+      <div class="row"><span class="cmd">/brain-brain-status</span> <span class="v">Show role, skills, learnings</span></div>
+      <div class="row"><span class="cmd">/brain-spike</span> <span class="v">Research &rarr; decision doc</span></div>
+      <div class="row"><span class="cmd">/brain-smart-capture</span> <span class="v">Save correction + confidence</span></div>
+      <div class="row"><span class="cmd">/brain-session-summary</span> <span class="v">End-of-session capture</span></div>
+      <div class="row"><span class="cmd">/brain-project-context</span> <span class="v">Load/save project artifacts</span></div>
+      <div class="row"><span class="cmd">/brain-capture-learning</span> <span class="v">Simple capture (no score)</span></div>
+    </div>
+    <div>
+      <div class="sub">Domain Skills</div>
+      <div class="row"><span class="cmd">/brain-api-design</span> <span class="v">OpenAPI-first contract design</span></div>
+      <div class="row"><span class="cmd">/brain-rag-pipeline</span> <span class="v">Chunking, embedding, retrieval</span></div>
+      <div class="row"><span class="cmd">/brain-agent-design</span> <span class="v">Agents, MCP, orchestration</span></div>
+      <div class="row"><span class="cmd">/brain-service-scaffold</span> <span class="v">Bootstrap FastAPI / NestJS</span></div>
+    </div>
+    <div>
+      <div class="sub">Terminal Scripts</div>
+      <div class="row"><span class="cmd">activate-role.sh &lt;role&gt;</span> <span class="v">Switch role + hooks</span></div>
+      <div class="row"><span class="cmd">activate-role.sh a+b</span> <span class="v">Compose roles</span></div>
+      <div class="row"><span class="cmd">init-project.sh &lt;name&gt;</span> <span class="v">Bootstrap project</span></div>
+      <div class="row"><span class="cmd">smart-capture.sh</span> <span class="v">Confidence learning</span></div>
+      <div class="row"><span class="cmd">session-summary.sh</span> <span class="v">Save summary</span></div>
+      <div class="row"><span class="cmd">list-learnings.sh</span> <span class="v">View all learnings</span></div>
+      <div class="row"><span class="cmd">sync.sh</span> <span class="v">Commit + push memory</span></div>
+      <p class="note">All at <span class="cmd">~/.claude/brain/scripts/</span></p>
+    </div>
+  </div>
+</div>
+
+<!-- ========== ROW 3: LEARNING SYSTEM ========== -->
+<div class="section t-pink span-2">
+  <div class="section-head">&#x1F9E0; Learning System</div>
+  <div class="section-body">
+    <div class="sub">How corrections evolve</div>
+    <div class="flow">
+      <div class="flow-box">Correct Claude</div>
+      <span class="flow-arr">&rarr;</span>
+      <div class="flow-box" style="color:#9ca3af">0.3 tentative</div>
+      <span class="flow-arr">&rarr;</span>
+      <div class="flow-box">repeat &times;2</div>
+      <span class="flow-arr">&rarr;</span>
+      <div class="flow-box" style="color:#f59e0b">0.45</div>
+      <span class="flow-arr">&rarr;</span>
+      <div class="flow-box">&times;4</div>
+      <span class="flow-arr">&rarr;</span>
+      <div class="flow-box" style="color:#3b82f6">0.75</div>
+      <span class="flow-arr">&rarr;</span>
+      <div class="flow-box">&times;6+</div>
+      <span class="flow-arr">&rarr;</span>
+      <div class="flow-box" style="color:#10b981;font-weight:600">0.9 &rarr; auto-promote to CLAUDE.md</div>
+    </div>
+    <div class="sub">Confidence levels</div>
+    <div class="conf-row">
+      <span class="conf-label" style="color:#9ca3af">tentative</span>
+      <div class="conf-track"><div class="conf-fill cf-gray" style="width:25%"></div></div>
+      <span class="conf-range">0.1-0.3</span>
+    </div>
+    <div class="conf-row">
+      <span class="conf-label" style="color:#f59e0b">growing</span>
+      <div class="conf-track"><div class="conf-fill cf-orange" style="width:50%"></div></div>
+      <span class="conf-range">0.4-0.6</span>
+    </div>
+    <div class="conf-row">
+      <span class="conf-label" style="color:#3b82f6">confident</span>
+      <div class="conf-track"><div class="conf-fill cf-blue" style="width:75%"></div></div>
+      <span class="conf-range">0.7-0.8</span>
+    </div>
+    <div class="conf-row">
+      <span class="conf-label" style="color:#10b981">rule</span>
+      <div class="conf-track"><div class="conf-fill cf-green" style="width:95%"></div></div>
+      <span class="conf-range">0.9-1.0</span>
+    </div>
+    <div class="sub">Manual capture (terminal)</div>
+    <pre><span class="hl-cmt"># new learning</span>
+<span class="hl-cmd">bash</span> ~/.claude/brain/scripts/smart-capture.sh \
+  <span class="hl-flag">--role</span> backend <span class="hl-flag">--confidence</span> 0.3 <span class="hl-flag">--seen</span> 1 <span class="hl-str">"Use connection pooling"</span>
+<span class="hl-cmt"># promote to permanent rule</span>
+<span class="hl-cmd">bash</span> ~/.claude/brain/scripts/smart-capture.sh \
+  <span class="hl-flag">--role</span> backend <span class="hl-flag">--promote</span> <span class="hl-str">"Use connection pooling"</span></pre>
+  </div>
+</div>
+
+<!-- ========== SESSION FLOW ========== -->
+<div class="section t-red">
+  <div class="section-head">&#x1F504; Session Flow</div>
+  <div class="section-body">
+    <ol class="steps">
+      <li>Open terminal in project dir</li>
+      <li>Start Claude Code: <span class="cmd">claude</span></li>
+      <li>Brain auto-loads (rules + skills)</li>
+      <li>Verify: <span class="cmd">/brain-brain-status</span></li>
+      <li>Work &mdash; brain rules apply automatically</li>
+      <li>Correct Claude &rarr; smart-capture saves it</li>
+      <li>Decisions: <span class="cmd">/brain-spike</span> &rarr; artifact</li>
+      <li>End: <span class="cmd">/brain-session-summary</span></li>
+      <li>Push: <span class="cmd">bash ~/.claude/brain/scripts/sync.sh</span></li>
+    </ol>
+  </div>
+</div>
+
+<!-- ========== ARTIFACTS ========== -->
+<div class="section t-teal">
+  <div class="section-head">&#x1F4BE; Artifacts</div>
+  <div class="section-body">
+    <p class="note">Persist in <span class="cmd">projects/&lt;name&gt;/artifacts/</span></p>
+    <div class="sub">Auto-saved by skills</div>
+    <div class="row"><span class="cmd">/brain-spike</span> <span class="v">YYYY-MM-DD-spike-&lt;topic&gt;.md</span></div>
+    <div class="row"><span class="cmd">/brain-api-design</span> <span class="v">YYYY-MM-DD-api-&lt;name&gt;.md</span></div>
+    <div class="row"><span class="k">Architecture</span> <span class="v">YYYY-MM-DD-adr-&lt;topic&gt;.md</span></div>
+    <div class="row"><span class="k">Debug</span> <span class="v">YYYY-MM-DD-debug-&lt;issue&gt;.md</span></div>
+    <div class="row"><span class="k">Schema</span> <span class="v">YYYY-MM-DD-schema-&lt;name&gt;.md</span></div>
+    <div class="sub">View</div>
+    <pre><span class="hl-cmd">ls</span> ~/.claude/brain/projects/my-api/artifacts/
+<span class="hl-cmd">cat</span> ~/.claude/brain/projects/my-api/context.md</pre>
+  </div>
+</div>
+
+<!-- ========== ROW 4: FILE STRUCTURE (FULL WIDTH) ========== -->
+<div class="section t-gray span-4">
+  <div class="section-head">&#x1F4C2; File Structure</div>
+  <div class="section-body" style="display:grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+    <pre style="margin:0"><span class="hl-path">~/.claude/brain/</span>                    <span class="hl-cmt"># symlink to repo</span>
+  <span class="hl-str">CLAUDE.md</span>                          <span class="hl-cmt"># entry point</span>
+  <span class="hl-path">shared/</span>
+    <span class="hl-str">CLAUDE.md</span>                        <span class="hl-cmt"># all-role rules</span>
+    <span class="hl-path">memory/</span>
+      <span class="hl-str">corrections.md</span>               <span class="hl-cmt"># global learnings</span>
+      <span class="hl-path">sessions/</span>                    <span class="hl-cmt"># summaries</span>
+    <span class="hl-path">skills/</span>                          <span class="hl-cmt"># 10 SKILL.md files</span>
+      api-design/  rag-pipeline/
+      agent-design/  service-scaffold/
+      spike/  smart-capture/
+      project-context/  brain-status/
+      capture-learning/  session-summary/
+    <span class="hl-path">hooks/</span>
+      block-secrets.sh  notify-done.sh</pre>
+    <pre style="margin:0">  <span class="hl-path">roles/</span>                             <span class="hl-cmt"># 10 profiles</span>
+    <span class="hl-path">backend/</span>
+      <span class="hl-str">CLAUDE.md</span>  hooks.json
+      <span class="hl-path">memory/</span>corrections.md
+    frontend/ devops/ data-engineer/
+    research/ fullstack/ tech-lead/
+    security/ mobile/ writer/
+  <span class="hl-path">projects/</span>                          <span class="hl-cmt"># per-project</span>
+    <span class="hl-path">my-project/</span>
+      <span class="hl-str">context.md</span>                   <span class="hl-cmt"># living memory</span>
+      <span class="hl-path">artifacts/</span>                   <span class="hl-cmt"># decisions</span>
+  <span class="hl-path">scripts/</span>                           <span class="hl-cmt"># CLI tools</span>
+  <span class="hl-path">.local/</span>                            <span class="hl-cmt"># gitignored</span>
+
+<span class="hl-path">~/.claude/skills/brain-*/</span>            <span class="hl-cmt"># auto-discovered</span></pre>
+  </div>
+</div>
+
+<!-- ========== ROW 5: COMPARISON (FULL WIDTH) ========== -->
+<div class="section t-orange span-4">
+  <div class="section-head">&#x1F50D; Comparison: claude-brain vs ECC vs gstack</div>
+  <div class="section-body">
+    <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap: 0; font-size: 0.72rem;">
+      <div style="padding:0.3rem 0.5rem; font-weight:600; border-bottom:2px solid #c2410c;">Feature</div>
+      <div style="padding:0.3rem 0.5rem; font-weight:600; border-bottom:2px solid #2563eb; color:#2563eb;">claude-brain</div>
+      <div style="padding:0.3rem 0.5rem; font-weight:600; border-bottom:2px solid #d1d9e0;">ECC</div>
+      <div style="padding:0.3rem 0.5rem; font-weight:600; border-bottom:2px solid #d1d9e0;">gstack</div>
+
+      <div style="padding:0.25rem 0.5rem; border-bottom:1px solid #f3e8de;">Install</div>
+      <div style="padding:0.25rem 0.5rem; border-bottom:1px solid #f3e8de;"><span class="cmd">bash install.sh</span></div>
+      <div style="padding:0.25rem 0.5rem; border-bottom:1px solid #f3e8de;"><span class="cmd">npm i -g ecc-universal</span></div>
+      <div style="padding:0.25rem 0.5rem; border-bottom:1px solid #f3e8de;"><span class="cmd">git clone + ./setup</span></div>
+
+      <div style="padding:0.25rem 0.5rem; border-bottom:1px solid #f3e8de;">Skills</div>
+      <div style="padding:0.25rem 0.5rem; border-bottom:1px solid #f3e8de;">10 (domain-focused)</div>
+      <div style="padding:0.25rem 0.5rem; border-bottom:1px solid #f3e8de;">125 (kitchen sink)</div>
+      <div style="padding:0.25rem 0.5rem; border-bottom:1px solid #f3e8de;">28 (sprint pipeline)</div>
+
+      <div style="padding:0.25rem 0.5rem; border-bottom:1px solid #f3e8de;">Role switching</div>
+      <div style="padding:0.25rem 0.5rem; border-bottom:1px solid #f3e8de; color:#2563eb; font-weight:600;">10 roles + compose</div>
+      <div style="padding:0.25rem 0.5rem; border-bottom:1px solid #f3e8de; color:#9ca3af;">No</div>
+      <div style="padding:0.25rem 0.5rem; border-bottom:1px solid #f3e8de; color:#9ca3af;">No</div>
+
+      <div style="padding:0.25rem 0.5rem; border-bottom:1px solid #f3e8de;">Learning</div>
+      <div style="padding:0.25rem 0.5rem; border-bottom:1px solid #f3e8de; color:#2563eb; font-weight:600;">Confidence-scored</div>
+      <div style="padding:0.25rem 0.5rem; border-bottom:1px solid #f3e8de;">Instincts (YAML)</div>
+      <div style="padding:0.25rem 0.5rem; border-bottom:1px solid #f3e8de;">Manual /retro</div>
+
+      <div style="padding:0.25rem 0.5rem; border-bottom:1px solid #f3e8de;">Project context</div>
+      <div style="padding:0.25rem 0.5rem; border-bottom:1px solid #f3e8de; color:#2563eb; font-weight:600;">Artifacts + context.md</div>
+      <div style="padding:0.25rem 0.5rem; border-bottom:1px solid #f3e8de; color:#9ca3af;">No</div>
+      <div style="padding:0.25rem 0.5rem; border-bottom:1px solid #f3e8de;">~/.gstack/projects/</div>
+
+      <div style="padding:0.25rem 0.5rem; border-bottom:1px solid #f3e8de;">Team sharing</div>
+      <div style="padding:0.25rem 0.5rem; border-bottom:1px solid #f3e8de;"><span class="cmd">--mode copy</span></div>
+      <div style="padding:0.25rem 0.5rem; border-bottom:1px solid #f3e8de;">npm package</div>
+      <div style="padding:0.25rem 0.5rem; border-bottom:1px solid #f3e8de;"><span class="cmd">cp -Rf</span></div>
+
+      <div style="padding:0.25rem 0.5rem;">Gets smarter</div>
+      <div style="padding:0.25rem 0.5rem; color:#059669; font-weight:600;">Yes (auto-promote)</div>
+      <div style="padding:0.25rem 0.5rem;">Yes (instincts)</div>
+      <div style="padding:0.25rem 0.5rem; color:#9ca3af;">No</div>
+    </div>
+  </div>
+</div>
+
+</div>
+</body>
+</html>

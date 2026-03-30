@@ -37,6 +37,12 @@ When user says "run pipeline <name>" or "research pipeline" or "build pipeline":
 4. If user says stop, pause the pipeline
 5. At the end, summarize what each step produced
 
+### Task Execution
+```
+brain-task-runner -> brain-smart-capture -> brain-session-summary
+```
+Use when: executing tasks from a project task queue (docs/superpowers/tasks/).
+
 ## Custom Pipelines
 
 User can say: "run spike then api-design then review"
